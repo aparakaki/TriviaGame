@@ -6,6 +6,7 @@ var answerInt;                  //setInterval variable for questions
 var index;                      //keeps track on which question is on
 var timeInt;                    //setInterval variable for time
 var timer;
+var outOfTime = false;          //determines whether the user ran out of time;
 var questionArray = [
     q1 ={ question: "question1",
         a1: "answer1.1",
@@ -42,13 +43,18 @@ function resetGame() {
 function startGame() {
     console.log("startGame");
     if(!isRunning) {
-        answerInt = setInterval(displayQuestion, 30000);
+        displayQuestion();
+        displayTimer();
         timeInt = setInterval(displayTimer, 1000);
         isRunning = true;
     }
 };
 
 function displayQuestion() {
+    if(index === questionArray.length) {
+        return;
+    }
+    // $("#timer-display").text(`Time Remaining: ${timer} seconds`);
     $("#question").text(`${questionArray[index].question}`);
     $("#a1").text(`${questionArray[index].a1}`);
     $("#a2").text(`${questionArray[index].a2}`);
@@ -62,28 +68,52 @@ function displayTimer() {
     $("#timer-display").text(`Time Remaining: ${timer} seconds`)
     timer--;
 
-    if(timer === 0) {
-        
+    if(timer < 0) {
+        outOfTime = true;
+        showAnswer();
     }
 };
 
 function showAnswer() {
+    clearInterval(timeInt);
+    if(outOfTime) {
+        $("#question").text("Out of Time!");
+        unanswered += 1;
+    }
+  
+    $("#a1").text("");
+    $("#a2").text("");
+    $("#a3").text("");
+    $("#a4").text("");
     index++;
+    isRunning = false;
+    timer = 30;
+    // setTimeout(displayQuestion, 3000);
+    setTimeout(startGame, 3000);
 };
 
+function checkAnswer(a) {
+    // clearInterval(answerInt);
+    
+    if(a === questionArray[index].answer) {
+        $("#question").text("Correct!");
+        correct += 1;
+    }
+    else {
+        $("#question").text("Wrong!");
+        incorrect += 1;
+    }
+    
+    showAnswer();
+}
+
 resetGame();
+
 $("#start").on("click", function() {
     startGame();
-    displayQuestion();
-    displayTimer();
 });
 
 $(".answer").on("click", function() {
     var x = $(this).attr("id");
-    if(x === questionArray[index].answer) {
-        
-    }
-    else {
-
-    }
+    checkAnswer(x);
 });
