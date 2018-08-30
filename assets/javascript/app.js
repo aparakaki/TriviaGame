@@ -1,7 +1,6 @@
 var correct;
 var incorrect;
 var unanswered;
-var isRunning;                  //timer
 var answerInt;                  //setInterval variable for questions
 var index;                      //keeps track on which question is on
 var timeInt;                    //setInterval variable for time
@@ -101,33 +100,20 @@ function resetGame() {
     index = 0;
     timer = 20;
 
-    isRunning = false;
     outOfTime = false;
     wrong = false;
 };
 
 function startGame() {
     console.log("startGame");
-    if(!isRunning) {
-        displayQuestion();
-        displayTimer();
-        timeInt = setInterval(displayTimer, 1000);
-        isRunning = true;
-        wrong = false;
-        outOfTime = false;
-    }
+    displayQuestion();
+    displayTimer();
+    timeInt = setInterval(displayTimer, 1000);
+    wrong = false;
+    outOfTime = false;
 };
 
 function displayQuestion() {
-    if(index === questionArray.length) {                //displays results once game ends
-        clearInterval(timeInt);
-        $("#question").text("Game Over. Here are your results:");
-        $("#a1").text(`Correct Answers: ${correct}`);
-        $("#a2").text(`Incorrect Answers: ${incorrect}`);
-        $("#a3").text(`Unanswered: ${unanswered}`);
-        $("#a4").html("<div class='text-center'><button id='play-again' type='button' class='btn btn-info'>Play Again?</button></div>");
-        return;
-    }
 
     $("#a1, #a2, #a3, #a4").addClass("answer");
 
@@ -154,9 +140,6 @@ function showAnswer() {
     
     $("#a1, #a2, #a3, #a4").text("");
     $("#a1, #a2, #a3, #a4").removeClass("answer");
-    // $("#a2").text("");
-    // $("#a3").text("");
-    // $("#a4").text("");
 
     if(outOfTime) {
         $("#question").text("Out of Time!");
@@ -167,10 +150,15 @@ function showAnswer() {
     }
     $("#a2").append(`<img src="${questionArray[index].image}" class="img-thumbnail img-size">`);
     index++;
-    isRunning = false;
-    timer = 20;
-    // setTimeout(displayQuestion, 2000);
-    setTimeout(startGame, 3000);
+
+    if(index === questionArray.length) {
+        setTimeout(gameOver, 2000);
+    }
+    else {
+        timer = 20;
+        setTimeout(startGame, 3000);
+    }
+
 };
 
 function checkAnswer(a) {
@@ -188,9 +176,18 @@ function checkAnswer(a) {
     showAnswer();
 }
 
+function gameOver() {
+    $("#question").text("Game Over! Here are your results:");
+    $("#a1").text(`Correct Answers: ${correct}`);
+    $("#a2").text(`Incorrect Answers: ${incorrect}`);
+    $("#a3").text(`Unanswered: ${unanswered}`);
+    $("#a4").html("<div class='text-center'><button id='play-again' type='button' class='btn btn-info'>Play Again?</button></div>");
+    return;
+}
+
 resetGame();
 
-$("button").on("click", function() {
+$(document).on("click", "button", function() {
     if (!$(".container").hasClass("cformat")) {
         $(".container").addClass("cformat");
     }
@@ -202,23 +199,3 @@ $(document).on("click", ".answer", function(){
     var x = $(this).attr("id");
     checkAnswer(x); 
 })
-
-// $("#start").on("click", function() {
-//     $(".container").addClass("cformat");
-//     startGame();
-// });
-
-// $(".answer").on("click", function() {
-//     if($(this).hasClass("clickable")) {
-//        var x = $(this).attr("id");
-//         checkAnswer(x); 
-//     }
-//     else {
-//         console.log("image clicked");
-//     }
-// });
-
-// $("#play-again").on("click", function() {
-//     resetGame();
-//     startGame();
-// })
