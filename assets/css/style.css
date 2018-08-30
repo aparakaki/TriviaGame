@@ -40,3 +40,7 @@ body {
     width: auto;
     max-height: 250px;
 }
+
+.answer:hover {
+    color: rgb(226, 39, 95);
+}

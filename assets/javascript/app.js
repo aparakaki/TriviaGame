@@ -1,13 +1,13 @@
 var correct;
 var incorrect;
 var unanswered;
-var isRunning = false;          //timer
+var isRunning;                  //timer
 var answerInt;                  //setInterval variable for questions
 var index;                      //keeps track on which question is on
 var timeInt;                    //setInterval variable for time
 var timer;
-var outOfTime = false;          //determines whether the user ran out of time;
-var wrong = false;
+var outOfTime;                   //determines whether the user ran out of time;
+var wrong;                      //determines if answer is wrong
 var questionArray = [
     q1 ={ question: "Where is Wakanda located?",
         a1: "South America",
@@ -91,7 +91,7 @@ var questionArray = [
         image: "assets/images/vibranium.jpg"}
 ];
 
-$("#question").html("<div class='text-center'><button id='start' type='button' class='btn btn-light'>Start Game</button></div>")
+$("#question").html("<div class='text-center'><button id='start' type='button' class='btn btn-light'>Start Game</button></div>");
 
 function resetGame() {
     correct = 0;
@@ -100,7 +100,10 @@ function resetGame() {
     count = 0;
     index = 0;
     timer = 20;
-    // isRunning = false;
+
+    isRunning = false;
+    outOfTime = false;
+    wrong = false;
 };
 
 function startGame() {
@@ -116,16 +119,24 @@ function startGame() {
 };
 
 function displayQuestion() {
-    if(index === questionArray.length) {
+    if(index === questionArray.length) {                //displays results once game ends
+        clearInterval(timeInt);
+        $("#question").text("Game Over. Here are your results:");
+        $("#a1").text(`Correct Answers: ${correct}`);
+        $("#a2").text(`Incorrect Answers: ${incorrect}`);
+        $("#a3").text(`Unanswered: ${unanswered}`);
+        $("#a4").html("<div class='text-center'><button id='play-again' type='button' class='btn btn-info'>Play Again?</button></div>");
         return;
     }
+
+    $("#a1, #a2, #a3, #a4").addClass("answer");
+
     $("#question").text(`${questionArray[index].question}`);
     $("#a1").text(`${questionArray[index].a1}`);
     $("#a2").text(`${questionArray[index].a2}`);
     $("#a3").text(`${questionArray[index].a3}`);
     $("#a4").text(`${questionArray[index].a4}`);
-  
-    console.log("questions");
+
 };
 
 function displayTimer() {
@@ -141,10 +152,11 @@ function displayTimer() {
 function showAnswer() {
     clearInterval(timeInt);
     
-    $("#a1").text("");
-    $("#a2").text("");
-    $("#a3").text("");
-    $("#a4").text("");
+    $("#a1, #a2, #a3, #a4").text("");
+    $("#a1, #a2, #a3, #a4").removeClass("answer");
+    // $("#a2").text("");
+    // $("#a3").text("");
+    // $("#a4").text("");
 
     if(outOfTime) {
         $("#question").text("Out of Time!");
@@ -156,13 +168,12 @@ function showAnswer() {
     $("#a2").append(`<img src="${questionArray[index].image}" class="img-thumbnail img-size">`);
     index++;
     isRunning = false;
-    timer = 30;
+    timer = 20;
     // setTimeout(displayQuestion, 2000);
     setTimeout(startGame, 3000);
 };
 
 function checkAnswer(a) {
-    // clearInterval(answerInt);
     
     if(a === questionArray[index].answerId) {
         $("#question").text("Correct!");
@@ -179,12 +190,35 @@ function checkAnswer(a) {
 
 resetGame();
 
-$("#start").on("click", function() {
-    $(".container").addClass("cformat");
+$("button").on("click", function() {
+    if (!$(".container").hasClass("cformat")) {
+        $(".container").addClass("cformat");
+    }
+    resetGame();
     startGame();
 });
 
-$(".answer").on("click", function() {
+$(document).on("click", ".answer", function(){
     var x = $(this).attr("id");
-    checkAnswer(x);
-});
+    checkAnswer(x); 
+})
+
+// $("#start").on("click", function() {
+//     $(".container").addClass("cformat");
+//     startGame();
+// });
+
+// $(".answer").on("click", function() {
+//     if($(this).hasClass("clickable")) {
+//        var x = $(this).attr("id");
+//         checkAnswer(x); 
+//     }
+//     else {
+//         console.log("image clicked");
+//     }
+// });
+
+// $("#play-again").on("click", function() {
+//     resetGame();
+//     startGame();
+// })
