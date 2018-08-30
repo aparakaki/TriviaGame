@@ -7,28 +7,91 @@ var index;                      //keeps track on which question is on
 var timeInt;                    //setInterval variable for time
 var timer;
 var outOfTime = false;          //determines whether the user ran out of time;
+var wrong = false;
 var questionArray = [
-    q1 ={ question: "question1",
-        a1: "answer1.1",
-        a2: "answer2.1",
-        a3: "answer3.1",
-        a4: "answer4.1",
-        answer: "a1"},
-    q2 ={ question: "question2",
-        a1: "answer1.2",
-        a2: "answer2.2",
-        a3: "answer3.2",
-        a4: "answer4.2",
-        answer: "a2"},
-    q3 ={ question: "question3",
-        a1: "answer1.3",
-        a2: "answer2.3",
-        a3: "answer3.3",
-        a4: "answer4.3",
-        answer: "a3"}
+    q1 ={ question: "Where is Wakanda located?",
+        a1: "South America",
+        a2: "Africa",
+        a3: "Antartica",
+        a4: "Australia",
+        answerId: "a2",
+        answer:"Africa",
+        image: "assets/images/wakanda.jpeg"},
+    q2 ={ question: "Thor's hammer mjolnir is made of metal from the heart of a dying what?",
+        a1: "Asteroid",
+        a2: "Comet",
+        a3: "Star",
+        a4: "Black Hole",
+        answerId: "a3",
+        answer: "Star",
+        image: "assets/images/hammer.jpg"},
+    q3 ={ question: "Peter Parker works as a photographer for:",
+        a1: "The Daily Planet",
+        a2: "The Daile Bugle",
+        a3: "The New York Times",
+        a4: "The Rolling Stone",
+        answerId: "a2",
+        answer: "The Daile Bugle",
+        image: "assets/images/spiderman.jpg"},
+    q4 ={ question: "Capitan America was frozen in which war?",
+        a1: "World War I",
+        a2: "World War II",
+        a3: "Cold War",
+        a4: "American Civil War",
+        answerId: "a2",
+        answer: "World War II",
+        image: "assets/images/frozen.jpg"},
+    q5 ={ question: "What was Black Widow before becoming a Russian spy?",
+        a1: "Ballerina",
+        a2: "Military Pilot",
+        a3: "Thief",
+        a4: "Athlete",
+        answerId: "a1",
+        answer: "Ballerina",
+        image: "assets/images/blackwidow.jpg"},
+    q6 ={ question: "Deadpool joined th Weapon X program because:",
+        a1: "He was forced to",
+        a2: "He thought it would be fun",
+        a3: "He had incurable cancer",
+        a4: "He wanted to fight for justice",
+        answerId: "a3",
+        answer: "He had incurable cancer",
+        image: "assets/images/deadpool.jpg"},
+    q7 ={ question: "What vehicle is the Avengers primary mode of transportation?",
+        a1: "A bus",
+        a2: "The Quinjet",
+        a3: "The Blackbird",
+        a4: "The Blackhawk",
+        answerId: "a2",
+        answer: "The Quinjet",
+        image: "assets/images/quinjet.jpg"},
+    q8 ={ question: "The Vision is an android created by:",
+        a1: "Reed Richards",
+        a2: "Tony Stark",
+        a3: "Ultron",
+        a4: "Doctor Doom",
+        answerId: "a3",
+        answer: "Ultron",
+        image: "assets/images/vision.jpg"},
+    q9 ={ question: "Jarvis was at one time a member of:",
+        a1: "The X-Men",
+        a2: "The Royal Air Force",
+        a3: "S.H.I.E.L.D.",
+        a4: "The CIA",
+        answerId: "a2",
+        answer: "The Royal Air Force",
+        image: "assets/images/jarvis.jpg"},
+    q10 ={ question: "What strong metal is found in Wakanda?",
+        a1: "Kevlar",
+        a2: "Kryptonite",
+        a3: "Adamantium",
+        a4: "Vibranium",
+        answerId: "a4",
+        answer: "Vibranium",
+        image: "assets/images/vibranium.jpg"}
 ];
 
-$("#question").html("<button id='start'>Start</button>")
+$("#question").html("<div class='text-center'><button id='start' type='button' class='btn btn-light'>Start Game</button></div>")
 
 function resetGame() {
     correct = 0;
@@ -36,7 +99,7 @@ function resetGame() {
     unanswered = 0;
     count = 0;
     index = 0;
-    timer = 30;
+    timer = 20;
     // isRunning = false;
 };
 
@@ -47,6 +110,8 @@ function startGame() {
         displayTimer();
         timeInt = setInterval(displayTimer, 1000);
         isRunning = true;
+        wrong = false;
+        outOfTime = false;
     }
 };
 
@@ -54,13 +119,12 @@ function displayQuestion() {
     if(index === questionArray.length) {
         return;
     }
-    // $("#timer-display").text(`Time Remaining: ${timer} seconds`);
     $("#question").text(`${questionArray[index].question}`);
     $("#a1").text(`${questionArray[index].a1}`);
     $("#a2").text(`${questionArray[index].a2}`);
     $("#a3").text(`${questionArray[index].a3}`);
     $("#a4").text(`${questionArray[index].a4}`);
-    
+  
     console.log("questions");
 };
 
@@ -76,32 +140,38 @@ function displayTimer() {
 
 function showAnswer() {
     clearInterval(timeInt);
-    if(outOfTime) {
-        $("#question").text("Out of Time!");
-        unanswered += 1;
-    }
-  
+    
     $("#a1").text("");
     $("#a2").text("");
     $("#a3").text("");
     $("#a4").text("");
+
+    if(outOfTime) {
+        $("#question").text("Out of Time!");
+        unanswered += 1;
+    }  
+    if(outOfTime || wrong) {
+        $("#a1").text(`The correct answer was: ${questionArray[index].answer}`);
+    }
+    $("#a2").append(`<img src="${questionArray[index].image}" class="img-thumbnail img-size">`);
     index++;
     isRunning = false;
     timer = 30;
-    // setTimeout(displayQuestion, 3000);
+    // setTimeout(displayQuestion, 2000);
     setTimeout(startGame, 3000);
 };
 
 function checkAnswer(a) {
     // clearInterval(answerInt);
     
-    if(a === questionArray[index].answer) {
+    if(a === questionArray[index].answerId) {
         $("#question").text("Correct!");
         correct += 1;
     }
     else {
         $("#question").text("Wrong!");
         incorrect += 1;
+        wrong = true;
     }
     
     showAnswer();
@@ -110,6 +180,7 @@ function checkAnswer(a) {
 resetGame();
 
 $("#start").on("click", function() {
+    $(".container").addClass("cformat");
     startGame();
 });
 

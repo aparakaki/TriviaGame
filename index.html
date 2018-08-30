@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Bangers|Ubuntu" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -11,15 +12,20 @@
     <title>Document</title>
 </head>
 <body>
-    <div>Title</div>
-    <div id="timer-display"></div>
-    <div id="question"></div>
-    <div id="answer-display">
-        <div id="a1" class="answer"></div>
-        <div id="a2" class="answer"></div>
-        <div id="a3" class="answer"></div>
-        <div id="a4" class="answer"></div>
+    <div class="container">
+        <div id="title-container" class="row cformat">
+            <div id="title" class="text-center">Marvel Trivia!</div>
+        </div>
+        <!-- <div id="trivia-container" class="row justify-content-md-center"> -->
+            <div id="timer-display" class="row justify-content-md-center"></div>
+            <div id="question" class="row justify-content-md-center"></div>
+            <!-- <div id="answer-display" class="row"> -->
+                <div id="a1" class="answer row justify-content-md-center"></div>
+                <div id="a2" class="answer row justify-content-md-center"></div>
+                <div id="a3" class="answer row justify-content-md-center"></div>
+                <div id="a4" class="answer row justify-content-md-center"></div>
+            <!-- </div> -->
+        <!-- </div> -->
     </div>
-    
 </body>
 </html>
