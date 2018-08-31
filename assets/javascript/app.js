@@ -156,7 +156,7 @@ function showAnswer() {
     }
     else {
         timer = 20;
-        setTimeout(startGame, 3000);
+        setTimeout(startGame, 2000);
     }
 
 };

@@ -41,6 +41,13 @@ body {
     max-height: 250px;
 }
 
+#question {
+    font-weight: bold;
+}
 .answer:hover {
     color: rgb(226, 39, 95);
+}
+
+#a4 {
+    padding-bottom: 30px;
 }
